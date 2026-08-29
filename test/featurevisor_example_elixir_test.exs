@@ -1,44 +1,68 @@
 defmodule FeaturevisorExampleElixirTest do
   use ExUnit.Case, async: true
 
-  test "evaluates a flag, variation, and variable" do
+  test "evaluates flags, variations, feature variables, and global variables" do
     assert FeaturevisorExampleElixir.evaluate(datafile()) == %{
-             revision: "test",
-             enabled: true,
-             variation: "treatment",
-             welcome_message: "Welcome to Featurevisor"
+             commerce_enabled: true,
+             checkout_variation: "express",
+             max_items: 25,
+             payment_methods: ["card", "wallet"],
+             service_endpoints: %{
+               "baseUrl" => "https://api.eu.example.com",
+               "timeoutMs" => 1200,
+               "retries" => 4
+             },
+             support_contact: "support-nl@example.com"
            }
   end
 
   defp datafile do
     %{
       "schemaVersion" => "2",
-      "featurevisorVersion" => "3.5.0",
+      "featurevisorVersion" => "3.7.0",
       "revision" => "test",
       "segments" => %{},
       "features" => %{
-        "mobile_experience" => %{
-          "key" => "mobile_experience",
+        "commerce_platform" => %{
           "bucketBy" => "userId",
-          "variations" => [
-            %{"value" => "control"},
-            %{"value" => "treatment"}
-          ],
+          "force" => [%{"segments" => "*", "enabled" => true}],
+          "traffic" => []
+        },
+        "checkout_experience" => %{
+          "bucketBy" => "userId",
+          "variations" => [%{"value" => "express", "weight" => 100}],
           "variablesSchema" => %{
-            "welcome_message" => %{
-              "type" => "string",
-              "defaultValue" => "Welcome"
-            }
+            "max_items" => %{"type" => "integer", "defaultValue" => 10},
+            "payment_methods" => %{"type" => "array", "defaultValue" => ["card"]}
           },
           "force" => [
             %{
               "segments" => "*",
               "enabled" => true,
-              "variation" => "treatment",
-              "variables" => %{"welcome_message" => "Welcome to Featurevisor"}
+              "variation" => "express",
+              "variables" => %{
+                "max_items" => 25,
+                "payment_methods" => ["card", "wallet"]
+              }
             }
           ],
           "traffic" => []
+        }
+      },
+      "variables" => %{
+        "serviceEndpoints" => %{
+          "type" => "object",
+          "defaultValue" => %{
+            "baseUrl" => "https://api.eu.example.com",
+            "timeoutMs" => 1200,
+            "retries" => 4
+          },
+          "overrides" => []
+        },
+        "supportContact" => %{
+          "type" => "string",
+          "defaultValue" => "support-nl@example.com",
+          "overrides" => []
         }
       }
     }
