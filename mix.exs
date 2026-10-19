@@ -17,7 +17,7 @@ defmodule FeaturevisorExampleElixir.MixProject do
 
   defp deps do
     [
-      {:featurevisor, "~> 1.0.0"},
+      {:featurevisor, "~> 2.0"},
       {:req, "~> 0.5"}
     ]
   end
