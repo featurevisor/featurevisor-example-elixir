@@ -18,14 +18,14 @@ defmodule FeaturevisorExampleElixirTest do
 
   defp datafile do
     %{
-      "schemaVersion" => "2",
-      "featurevisorVersion" => "3.7.0",
+      "schemaVersion" => "4",
+      "featurevisorVersion" => "4.0.0",
       "revision" => "test",
       "segments" => %{},
       "features" => %{
         "commerce_platform" => %{
           "bucketBy" => "userId",
-          "force" => [%{"segments" => "*", "enabled" => true}],
+          "force" => [%{"conditions" => "*", "enabled" => true}],
           "traffic" => []
         },
         "checkout_experience" => %{
@@ -37,7 +37,7 @@ defmodule FeaturevisorExampleElixirTest do
           },
           "force" => [
             %{
-              "segments" => "*",
+              "conditions" => "*",
               "enabled" => true,
               "variation" => "express",
               "variables" => %{
